@@ -24,15 +24,14 @@ Drupal.behaviors.ajax_browscap = {
       formatProperty: function(prop, value) {
         value = value.toLowerCase().replace(/[^a-z0-9-]+/gi, '-');
         return prop + '-' + value;
-      },
-      settings: Drupal.settings.ajax_browscap.ajax_browscap_settings
+      }
     };
     ajaxBrowscap.browser().done(function(browserData) {
-      var obj = ajaxBrowscap.settings,
-          classes = [],
+      var classes = [],
           i = 0;
-      for (var prop in obj) {
-        if (obj.hasOwnProperty(prop)) {
+
+      for (var prop in browserData) {
+        if (browserData.hasOwnProperty(prop)) {
           classes[i] = ajaxBrowscap.formatProperty(prop, browserData[prop]);
           i++;
         }

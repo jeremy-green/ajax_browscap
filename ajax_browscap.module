@@ -26,7 +26,15 @@ function ajax_browscap_menu() {
 
 function ajax_browscap_json() {
   if (module_exists('browscap') && function_exists('browscap_get_browser')) {
-    drupal_json_output(browscap_get_browser());
+    $settings = variable_get('ajax_browscap_settings', array());
+    $browser = browscap_get_browser();
+    $output = array();
+    foreach ($settings as $key => $value) {
+      if (isset($browser[$key])) {
+        $output[$key] = $browser[$key];
+      }
+    }
+    drupal_json_output($output);
     drupal_exit();
   }
 }
@@ -37,11 +45,6 @@ function ajax_browscap_json() {
 function ajax_browscap_preprocess_html(&$vars) {
   $settings = variable_get('ajax_browscap_settings', array());
   if ($settings['ajax_browscap_add_js']) {
-    unset($settings['ajax_browscap_add_js']);
-    $ajax_browscap_js_settings = array(
-      'ajax_browscap_settings' => $settings,
-    );
-    drupal_add_js(array('ajax_browscap' => $ajax_browscap_js_settings), 'setting');
     drupal_add_js(drupal_get_path('module', 'ajax_browscap') . '/js/ajax_browscap.js');
   }
 }
